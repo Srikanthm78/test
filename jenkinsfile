@@ -1,26 +1,39 @@
 pipeline {
-    stages: 'Checkout'{
+    agent any
 
-    }
-    stages: 'Build'{
+    stages {
+        stage('Checkout') {
+            git checkout
+        }
+        stage()'Build') {
+            mvn clean package //this is for java code base
+            dotnet Build //this is for microsoft dotnet code base
+            npm build //this is for angular/react code base
+        }
+        stage('test') {
+            mvn test //junit
+        }
+        stage('scan') {
+            mvn sonar:sonar //sonarcube credentials
+            //service accounts
+        }
+        stage("Quality gate") {
+            steps {
+                waitFprQualityGate abortPipeline: true
+            }
+        }
+        stage('Artifactory') {
+            jFrog //url // credentials
+        }
+        stage('DeployToDev') {
+        //connection to development server
+        //publish -> CLI(AWS CLI, Azure CLI, Plugins)
+        }
+        stage('DeployToTest') {
 
-    }
-    stages: 'test'{
+        }
+        stage('DeployToProd') {
 
-    }
-    stages: 'scan'{
-
-    }
-    stages: 'Artifactory'{
-
-    }
-    stages: 'DeployToDev'{
-
-    }
-    stages: 'DeployToTest'{
-
-    }
-    stages: 'DeployToProd'{
-
+        }
     }
 }
